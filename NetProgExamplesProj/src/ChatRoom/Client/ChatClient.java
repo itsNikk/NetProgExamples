@@ -30,8 +30,24 @@ public class ChatClient {
             while ((serverMessage = in.readLine()) != null) {
                 System.out.println(serverMessage);
             }
+        } catch (ConnectException c) {
+            System.out.println("Server is down");
+            try {
+                Reconnect();
+            } catch (InterruptedException e) {
+                System.out.println(Thread.currentThread().getName() + " interrupted.");
+                System.exit(0);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void Reconnect() throws InterruptedException {
+        for (int i = 3; i > 0; i--) {
+            System.out.print("Reconnecting in " + i + " seconds");
+            Thread.sleep(1000);
+        }
+
     }
 }
