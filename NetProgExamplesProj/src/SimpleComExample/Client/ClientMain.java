@@ -1,5 +1,8 @@
 package SimpleComExample.Client;
 
+import SimpleComExample.Server.AppServer;
+import SimpleComExample.Server.ServerMain;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,17 +12,14 @@ import java.net.UnknownHostException;
 public class ClientMain {
 
     public static final double NUM_CLIENTS = 10;
-    private static String serverAddress;
-    private static int serverPort;
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws InterruptedException {
         for (int i = 0; i < NUM_CLIENTS; i++) {
-            serverAddress = "localhost";
-            serverPort = 8080;
-            new Thread(new ClientConnector("Client-" + (i + 1), serverAddress, serverPort)).start();
+            String serverAddress = AppServer.getServerAddress();
+            int serverPort = AppServer.getServerPort();
+            new Thread(new ClientConnector("Client-" + (i + 1),
+                    serverAddress, serverPort)).start();
         }
-
     }
 
     private static class ClientConnector implements Runnable {
