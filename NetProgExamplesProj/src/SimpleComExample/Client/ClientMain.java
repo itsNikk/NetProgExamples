@@ -1,7 +1,6 @@
 package SimpleComExample.Client;
 
 import SimpleComExample.Server.AppServer;
-import SimpleComExample.Server.ServerMain;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,17 +10,23 @@ import java.net.UnknownHostException;
 
 public class ClientMain {
 
-    public static final double NUM_CLIENTS = 10;
+    private static final double NUM_CLIENTS = 10;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+        String serverAddress = AppServer.getServerAddress();
+        int serverPort = AppServer.getServerPort();
+
         for (int i = 0; i < NUM_CLIENTS; i++) {
-            String serverAddress = AppServer.getServerAddress();
-            int serverPort = AppServer.getServerPort();
             new Thread(new ClientConnector("Client-" + (i + 1),
                     serverAddress, serverPort)).start();
         }
     }
 
+    /**
+     * This specific class (only with JDK version from 16 and on) can be converted into a Record type.
+     *
+     * @see <a href="https://docs.oracle.com/en/java/javase/21/language/records.html#GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263">Record class Oracle doc</a>
+     */
     private static class ClientConnector implements Runnable {
 
         private final String clientName;
