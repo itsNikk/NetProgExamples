@@ -45,7 +45,7 @@ public class ChatClient {
 
     private static void Reconnect() throws InterruptedException {
         for (int i = 3; i > 0; i--) {
-            System.out.print("Reconnecting in " + i + " seconds");
+            System.out.print("Reconnecting in " + i + " seconds\r");
             Thread.sleep(1000);
         }
 
