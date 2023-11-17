@@ -36,9 +36,10 @@ public class ClientHandler implements Runnable {
             ChatRoomServer.broadcastMessage(welcomeMessage, this);
 
             String clientMessage;
-            while ((clientMessage = inFromClient.readLine()) != null) {
-                //if ("exit".equalsIgnoreCase(clientMessage)) break;
-
+            while (true) {
+                clientMessage = inFromClient.readLine();
+                //https://www.w3schools.com/java/ref_string_equalsignorecase.asp
+                if ("exit".equalsIgnoreCase(clientMessage)) break;
                 ChatRoomServer.broadcastMessage(username + ": " + clientMessage, this);
             }
         } catch (IOException e) {
@@ -48,7 +49,7 @@ public class ClientHandler implements Runnable {
                 inFromClient.close();
                 outToClient.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("[ClientHandler]: Can't ");
             }
 
             String goodbyeMessage = username + " left the chat.";
