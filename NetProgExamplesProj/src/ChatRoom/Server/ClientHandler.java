@@ -7,55 +7,58 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
-    private Socket clientSocket;
-    private BufferedReader reader;
-    private PrintWriter writer;
+    private final Socket clientSocket;
+    private BufferedReader inFromClient;
+    private PrintWriter outToClient;
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        getClientStreams(clientSocket);
+    }
 
+    private void getClientStreams(Socket clientSocket) {
         try {
-            reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            writer = new PrintWriter(clientSocket.getOutputStream(), true);
+            inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            outToClient = new PrintWriter(clientSocket.getOutputStream(), true);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("[ClientHandler]: Can't get client streams");
         }
     }
 
     @Override
     public void run() {
-        try {
-            String username = reader.readLine();
-            System.out.println(username + " si è unito alla chat.");
+        String username = null;
+        try (clientSocket) {
+            username = inFromClient.readLine();
+            String welcomeMessage = username + " entered the chat.";
+            System.out.println(welcomeMessage);
 
-            MultiServer.broadcastMessage(username + " si è unito alla chat.", this);
+            ChatRoomServer.broadcastMessage(welcomeMessage, this);
 
             String clientMessage;
-            while ((clientMessage = reader.readLine()) != null) {
-                if ("exit".equalsIgnoreCase(clientMessage)) {
-                    break;
-                }
+            while ((clientMessage = inFromClient.readLine()) != null) {
+                //if ("exit".equalsIgnoreCase(clientMessage)) break;
 
-                MultiServer.broadcastMessage(username + ": " + clientMessage, this);
+                ChatRoomServer.broadcastMessage(username + ": " + clientMessage, this);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("[ClientHandler]: Can't communicate with client");
         } finally {
             try {
-                reader.close();
-                writer.close();
-                clientSocket.close();
+                inFromClient.close();
+                outToClient.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            System.out.println("Il client ha lasciato la chat.");
-            MultiServer.removeClient(this);
-            MultiServer.broadcastMessage("Un utente ha lasciato la chat.", this);
+            String goodbyeMessage = username + " left the chat.";
+            System.out.println(goodbyeMessage);
+            ChatRoomServer.removeClient(this);
+            ChatRoomServer.broadcastMessage(goodbyeMessage, this);
         }
     }
 
     public void sendMessage(String message) {
-        writer.println(message);
+        outToClient.println(message);
     }
 }
