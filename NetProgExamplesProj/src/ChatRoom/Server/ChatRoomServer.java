@@ -22,21 +22,25 @@ public class ChatRoomServer {
         }
     }
 
-    private static void manageConnections(ServerSocket serverSocket) throws IOException {
+    private void manageConnections(ServerSocket serverSocket){
         while (true) {
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("New connection from: " + clientSocket.getInetAddress());
+           try {
+               Socket clientSocket = serverSocket.accept();
+               System.out.println("New connection from: " + clientSocket.getInetAddress());
 
-            ClientHandler clientHandler = new ClientHandler(clientSocket);
-            addClient(clientHandler);
-            new Thread(clientHandler).start();
+               ClientHandler clientHandler = new ClientHandler(clientSocket);
+               addClient(clientHandler);
+               new Thread(clientHandler).start();
+           } catch (IOException exception){
+               System.out.println("[CHATSERVER]: Error on accepting a new client.");
+           }
         }
     }
 
     public static void broadcastMessage(String message, ClientHandler sender) {
         synchronized (clients) {
             for (ClientHandler client : clients) {
-                // Sender doesn't need to receive it's own message
+                // Sender doesn't need to receive it's own message in our implementation.
                 if (client != sender) client.sendMessage(message);
             }
         }
@@ -48,7 +52,7 @@ public class ChatRoomServer {
         }
     }
 
-    public static void addClient(ClientHandler clientHandler) {
+    public void addClient(ClientHandler clientHandler) {
         synchronized (clients) {
             clients.add(clientHandler);
         }
