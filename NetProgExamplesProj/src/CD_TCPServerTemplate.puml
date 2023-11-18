@@ -1,0 +1,39 @@
+@startuml
+package App.Server{
+
+class ServerMain{
++{static} void main(String[] args)
+}
+
+class AppServer {
+    + {static} final String ADDRESS = "localhost"
+    + {static} final int PORT = 80
+
+    +startServer()
+    +manageConnections(serverSocket : ServerSocket)
+}
+
+class ClientHandler implements Runnable {
+    + ClientHandler(Socket : clientToManage)
+    +run()
+    - getClientStreams(clientSocket : Socket)
+}
+
+note right of ClientHandler: This class is a Thread,\nin this case it implements Runnable interface\nbut could obviously extend Thread class.
+note left of ClientHandler: the run() method is specific to the application.
+note right of AppServer: this server is a multithread server
+AppServer "1" ---> "0...*" ClientHandler : "crea"
+ServerMain "1" -> "1" AppServer : "Crea"
+
+}
+
+
+package App.Client{
+
+class Client{
++ {static} void main(String[] args)
+}
+note left of Client: Just for now and to simplify,\nwe can write client code inside the main, as usual.
+Client "0...*" --> "1" AppServer : connectTo
+
+@enduml
