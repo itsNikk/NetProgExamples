@@ -14,7 +14,7 @@ public class Client {
 
     public static void main(String[] args) {
         /* Try with-MULTI Resources
-           try (res1; res2; res3)
+           try (res1; res2; res3) {} catch (SomeException exception) {}
          */
         try (Socket socket = new Socket(SERVER_IP, SERVER_PORT);
              BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

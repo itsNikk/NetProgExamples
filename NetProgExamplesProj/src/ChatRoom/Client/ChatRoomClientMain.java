@@ -10,8 +10,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ChatRoomClientMain {
-    private static final String SERVER_ADDRESS = ChatRoomServer.address;
-    private static final int SERVER_PORT = ChatRoomServer.port;
+    private static final String SERVER_ADDRESS = ChatRoomServer.ADDRESS;
+    private static final int SERVER_PORT = ChatRoomServer.PORT;
 
     public static void main(String[] args) {
         try (Socket client = new Socket(SERVER_ADDRESS, SERVER_PORT);
