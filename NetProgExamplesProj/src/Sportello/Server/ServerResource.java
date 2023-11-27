@@ -9,7 +9,10 @@ public class ServerResource {
 
     public synchronized void enterResource(PrintWriter outToClient) {
         try {
-            while (isUse) wait();
+            while (isUse) {
+                outToClient.println("Accesso alle risorse negato. Attendere.");
+                wait();
+            }
         } catch (InterruptedException interruptedException) {
             System.out.println("Thread interrotto.");
         }
