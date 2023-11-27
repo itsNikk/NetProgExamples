@@ -12,7 +12,7 @@ public class SharedServer {
     public static final ServerResource resource = new ServerResource();
 
     public void startServer() {
-        //perchè posso mettere una classe dentro () in un try => implements Closable
+        //perchè posso mettere una classe dentro le () di in un try? => implements Closable
         try (ServerSocket s = new ServerSocket(80)) {
             System.out.println("Open server on port: " + PORT);
             // Fa spegnere il server dopo N millisecondi
@@ -34,6 +34,7 @@ public class SharedServer {
                 1) Creare un thread per ogni client ricevuto (on-demand)
                 2) Creare e gestire un POOL di thread sul server.
                  */
+
                 //ALTERNATIVA new Thread(new ClientHandler(client)).start()
                 new ClientHandler(client).start();
             } catch (SocketTimeoutException ste) {
