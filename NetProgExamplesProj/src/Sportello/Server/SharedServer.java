@@ -16,7 +16,7 @@ public class SharedServer {
         try (ServerSocket s = new ServerSocket(80)) {
             System.out.println("Open server on port: " + PORT);
             // Fa spegnere il server dopo N millisecondi
-            s.setSoTimeout(3000);
+            s.setSoTimeout(600000);
             manageConnections(s);
         } catch (IOException ioe) {
             System.err.println("[SERVER]: non si può aprire server sulla porte:" + PORT);
