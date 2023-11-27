@@ -16,6 +16,7 @@ public class ClientHandler extends Thread {
     public ClientHandler(Socket clientToManage) {
         this.clientToManage = clientToManage;
         //prendere gli streams del client
+        //ALTERNATIVA: Mettere il codice del metodo getClientStreams qua sotto, gestendo opportunamente le eccezioni
         getClientStreams();
     }
 
@@ -39,12 +40,16 @@ public class ClientHandler extends Thread {
             String clientName = inFromClient.readLine();
             System.out.println("[CLIENT_HANDLER]: new client " + clientName);
 
-            // client chieded la risorsa = auto chiede parcheggio
+            // client chieded la risorsa = auto chiede di entrare nel parcheggio
             SharedServer.resource.enterResource(outToClient);
-            //se riesce a entrare, la usa
+            //Se riesce a ottenere la risorsa, la usa
             String message;
             while ((message = inFromClient.readLine()) != null) {
                 // se ne va dopo un po'
+                /* IMPORTANTE: L'unico modo per uscire da questo ciclo è
+                    leggere un NULL dallo stream associato, il che capita solo quando la connessione si chiude,
+                    generando un'eccezione figlia di IOException che è SocketException
+                 */
                 SharedServer.resource.handleResource(clientName, message);
             }
 

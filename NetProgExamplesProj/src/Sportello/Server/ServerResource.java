@@ -20,9 +20,7 @@ public class ServerResource {
 
     public synchronized void handleResource(String name, String message) {
         if (isUse) System.out.println(name + " ha utilizzato la risorsa: " + message);
-        else {
-            out.println("Accesso negato. Richiedi l'accesso");
-        }
+        else out.println("Accesso negato. Richiedi l'accesso");
     }
 
     public synchronized void releaseResource() {
