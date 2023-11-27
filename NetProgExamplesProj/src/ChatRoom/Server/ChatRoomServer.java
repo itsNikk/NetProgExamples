@@ -1,60 +1,94 @@
 package ChatRoom.Server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ChatRoomServer {
 
-    public static final int PORT = 8888;
-    public static final String ADDRESS = "localhost";
-    private static final List<ClientHandler> clients = new ArrayList<>();
+    public static final String address = "localhost";
+    public static final int port = 80;
 
+    //Chat Room
+    private static ArrayList<ChatRoomClientHandler> clientsInRoom = new ArrayList();
 
     public void startServer() {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server started on port " + PORT);
-            manageConnections(serverSocket);
-        } catch (IOException e) {
-            System.out.println("Can't start server on port: " + PORT);
+        try (ServerSocket s = new ServerSocket(port)) {
+            System.out.println("Server up and running on port:" + port);
+            manageConnections(s);
+        } catch (IOException ioe) {
+            System.out.println("[SERVER]: Can't bund server on port" + port + ". Closing...");
+            System.exit(0);
+            // Trova la prima porta libera e binda il server su quella porta
         }
     }
 
-    private void manageConnections(ServerSocket serverSocket){
+    public void manageConnections(ServerSocket s) {
         while (true) {
-           try {
-               Socket clientSocket = serverSocket.accept();
-               System.out.println("New connection from: " + clientSocket.getInetAddress());
-
-               ClientHandler clientHandler = new ClientHandler(clientSocket);
-               addClient(clientHandler);
-               new Thread(clientHandler).start();
-           } catch (IOException exception){
-               System.out.println("[CHATSERVER]: Error on accepting a new client.");
-           }
-        }
-    }
-
-    public static void broadcastMessage(String message, ClientHandler sender) {
-        synchronized (clients) {
-            for (ClientHandler client : clients) {
-                // Sender doesn't need to receive it's own message in our implementation.
-                if (client != sender) client.sendMessage(message);
+            try {
+                Socket client = s.accept();
+                ChatRoomClientHandler c = new ChatRoomClientHandler(client);
+                clientsInRoom.add(c);
+                new Thread(c).start();
+            } catch (IOException ioe) {
+                System.out.println("[SERVER]: Can't accept clients");
             }
         }
     }
 
-    public static void removeClient(ClientHandler clientHandler) {
-        synchronized (clients) {
-            clients.remove(clientHandler);
+    public static void broadcast(String message, ChatRoomClientHandler sender) {
+        synchronized (clientsInRoom) {
+            for (ChatRoomClientHandler handler : clientsInRoom) {
+                if (handler != sender) handler.outToClient.println(message);
+            }
         }
     }
 
-    public void addClient(ClientHandler clientHandler) {
-        synchronized (clients) {
-            clients.add(clientHandler);
+    private class ChatRoomClientHandler implements Runnable {
+        private Socket clientToManage;
+        private BufferedReader inFromClient;
+        private PrintWriter outToClient;
+
+        public ChatRoomClientHandler(Socket client) {
+            clientToManage = client;
+            getClientStreams();
+        }
+
+        private void getClientStreams() {
+            try {
+                inFromClient = new BufferedReader(new InputStreamReader(clientToManage.getInputStream()));
+                outToClient = new PrintWriter(clientToManage.getOutputStream(), true);
+            } catch (IOException ioe) {
+                System.out.println("[SERVERHANDLER]: can't get client streams");
+                try {
+                    clientToManage.close();
+                } catch (IOException e) {
+                    System.out.println("[SERVERHANDLER]: error while closing client socket.");
+                }
+            }
+        }
+
+        @Override
+        public void run() {
+            try {
+                String username = inFromClient.readLine();
+                String welcomeMessage = username + " entered the chat.";
+                ChatRoomServer.broadcast(welcomeMessage, this);
+                while (true) {
+                    String messageFromConsole = inFromClient.readLine();
+                    String messageToSend = username + ": " + messageFromConsole;
+                    System.out.println(messageToSend);
+                    ChatRoomServer.broadcast(messageToSend, this);
+                }
+            } catch (IOException ioe) {
+                System.out.println("[SERVERHANDLER]: Can't communicate with client");
+            }
         }
     }
+
+
 }
