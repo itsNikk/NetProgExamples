@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientHandler extends Thread {
 
@@ -47,14 +48,18 @@ public class ClientHandler extends Thread {
             while ((message = inFromClient.readLine()) != null) {
                 // se ne va dopo un po'
                 /* IMPORTANTE: L'unico modo per uscire da questo ciclo è
-                    leggere un NULL dallo stream associato, il che capita solo quando la connessione si chiude,
+                    leggere un NULL dallo stream associato, e ciò capita solo quando la connessione si chiude,
                     generando un'eccezione figlia di IOException che è SocketException
                  */
                 SharedServer.resource.handleResource(clientName, message);
             }
 
 
-        } catch (IOException ioException) {
+        } catch (SocketException socketException){
+            System.out.println("[CLIENT_HANDLER]: Connessione chiusa dal client");
+            SharedServer.resource.releaseResource();
+        }
+        catch (IOException ioException) {
             System.out.println("[CLIENT_HANDLER]: non posso comunicare con il client");
             SharedServer.resource.releaseResource();
         } finally {
