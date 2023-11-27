@@ -23,6 +23,7 @@ public class ChatRoomServer {
         } catch (IOException ioe) {
             System.out.println("[SERVER]: Can't bund server on port" + port + ". Closing...");
             System.exit(0);
+            // Trova la prima porta libera e binda il server su quella porta
         }
     }
 
