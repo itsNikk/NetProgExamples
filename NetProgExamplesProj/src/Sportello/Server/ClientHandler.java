@@ -51,9 +51,10 @@ public class ClientHandler extends Thread {
 
         } catch (IOException ioException) {
             System.out.println("[CLIENT_HANDLER]: non posso comunicare con il client");
-
+            SharedServer.resource.releaseResource();
         } finally {
             //Il client rilascia la risorsa
+            System.out.println("[CLIENT_HANDLER]: Rilascio la risorsa");
             SharedServer.resource.releaseResource();
             try {
                 clientToManage.close();
