@@ -1,4 +1,4 @@
-package JabberService.JabberServer;
+package quartaB.JabberServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketImpl;
 
 public class ServerMain {
     public static final int PORT = 80;
@@ -25,7 +24,7 @@ public class ServerMain {
 
                 PrintWriter toClient = new PrintWriter(newClient.getOutputStream(),
                         true);
-            
+
                 //Logica del server
                 while (true) {
                     String strFromClient = fromClient.readLine();
