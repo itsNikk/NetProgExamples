@@ -11,6 +11,7 @@ public class JabberServerMain {
     public static final int PORT = 80;
 
     public static void main(String[] args) {
+
         try {
             ServerSocket serverSocket = new ServerSocket(PORT);
             System.out.println("Server aperto sulla porta: " + PORT);
