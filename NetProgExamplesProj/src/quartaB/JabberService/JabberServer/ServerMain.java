@@ -1,4 +1,4 @@
-package quartaB.JabberServer;
+package quartaB.JabberService.JabberServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
