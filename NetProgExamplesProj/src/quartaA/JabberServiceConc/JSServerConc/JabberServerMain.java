@@ -1,4 +1,4 @@
-package quartaA.JabberService.JabberServer;
+package quartaA.JabberServiceConc.JSServerConc;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,19 +20,8 @@ public class JabberServerMain {
                 Socket newClient = serverSocket.accept();
                 System.out.println("Nuova connessione da:> " + newClient.getInetAddress());
 
-                //Prendere streams del client
-                BufferedReader fromClient = new BufferedReader(
-                        new InputStreamReader(newClient.getInputStream()));
-                PrintWriter toClient = new PrintWriter(newClient.getOutputStream(), true);
+                new JabberServiceThread(newClient).start();
 
-                //LOGICA SERVER / protocollo applicativo
-                while (true) {
-                    String strFromClient = fromClient.readLine();
-                    if (strFromClient.equals("END")) break;
-                    System.out.println("Echoing -> " + strFromClient + "!");
-                    toClient.println(strFromClient + "!");
-                }
-                newClient.close();
             }
 
         } catch (IllegalArgumentException illegalArgumentException) {
