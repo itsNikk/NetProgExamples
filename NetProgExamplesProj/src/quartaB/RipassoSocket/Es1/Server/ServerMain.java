@@ -26,14 +26,15 @@ public class ServerMain {
                 BufferedReader fromCLient = new BufferedReader(new InputStreamReader(newClient.getInputStream()));
                 PrintWriter toCLient = new PrintWriter(newClient.getOutputStream(), true);
 
-                //leggere la stringa del client
+                // Leggere la stringa del client
                 String valueFromClient = fromCLient.readLine();
                 System.out.println(valueFromClient);
 
-                //Calcolo totale caratteri
+                // Calcolo totale caratteri
                 int totalChars = valueFromClient.length();
+
+                // Calcolo vocali e consonanti
                 int vowelsCount = 0, consonantsCount = 0;
-                //Calcolo vocali e consonanti
                 for (char c : valueFromClient.toCharArray()) {
                     if (!Character.isLetter(c)) continue;
 
@@ -41,7 +42,7 @@ public class ServerMain {
                     else consonantsCount++;
                 }
 
-                //Spedire a client i risultati
+                // Spedire a client i risultati
                 /*
                 TODO: Secondo voi, perchè questa soluzione non funziona bene? ;) (Continua..)
                 toCLient.println("La stringa inviata ha: \n" +
@@ -64,7 +65,7 @@ public class ServerMain {
     }
 
     private static boolean isVowel(char c) {
-        //IndexOf restituisce il numero intero corrispondente alla posizione di c nella stringa di partenza
+        //IndexOf restituisce il numero intero (l'indice) corrispondente alla posizione di c nella stringa di partenza
         // se non esiste allora indexOf restituirà -1;
         return "aeiouAEIOU".indexOf(c) >= 0;
     }
