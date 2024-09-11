@@ -11,6 +11,7 @@ import java.net.Socket;
 public class ServerMain {
 
     public static final int PORT = 1324;
+    public static final String ADDRESS = "localhost";
 
     public static void main(String[] args) {
         try {

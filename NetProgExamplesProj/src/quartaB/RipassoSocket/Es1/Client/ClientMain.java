@@ -19,7 +19,7 @@ public class ClientMain {
         //UnknownHostExp => ho sbagliato a scrivere l'IP...
         // localhost = 127.0.0.1
         try {
-            Socket s = new Socket("localhost", ServerMain.PORT);
+            Socket s = new Socket(ServerMain.ADDRESS, ServerMain.PORT);
 
             BufferedReader fromServer = new BufferedReader(new InputStreamReader(s.getInputStream()));
             PrintWriter toServer = new PrintWriter(s.getOutputStream(), true);
