@@ -11,7 +11,7 @@ import java.net.Socket;
 public class ServerMain {
 
     public static final int PORT = 1324;
-    public static final String ADDRESS = "localhost";
+    public static final String ADDRESS = "127.0.0.1";
 
     public static void main(String[] args) {
         try {
@@ -30,9 +30,27 @@ public class ServerMain {
                 String valueFromClient = fromCLient.readLine();
                 System.out.println(valueFromClient);
 
+                //Calcolo totale caratteri
                 int totalChars = valueFromClient.length();
-                toCLient.println("La stringa inviata ha:" + totalChars + " caratteri");
+                int vowelsCount = 0, consonantsCount = 0;
+                //Calcolo vocali e consonanti
+                for (char c : valueFromClient.toCharArray()) {
+                    if (!Character.isLetter(c)) continue;
 
+                    if (isVowel(c)) vowelsCount++;
+                    else consonantsCount++;
+                }
+
+                //Spedire a client i risultati
+                /*
+                TODO: Secondo voi, perchè questa soluzione non funziona? ;) (Continua..)
+                toCLient.println("La stringa inviata ha: \n" +
+                        "-" + totalChars + " caratteri \n" +
+                        "-" + vowelsCount + " vocali \n" +
+                        "-" + consonantsCount + " consonanti");*/
+
+                //E invece questa funziona?
+                toCLient.println("Vocali: " + vowelsCount + ", Consonanti: " + consonantsCount + ", Caratteri totali: " + totalChars);
                 newClient.close();
             }
 
@@ -43,5 +61,11 @@ public class ServerMain {
         } catch (IOException ioException) {
             System.out.println(ioException.getMessage());
         }
+    }
+
+    private static boolean isVowel(char c) {
+        //IndexOf restituisce il numero intero corrispondente alla posizione di c nella stringa di partenza
+        // se non esiste allora indexOf restituirà -1;
+        return "aeiouAEIOU".indexOf(c) >= 0;
     }
 }
