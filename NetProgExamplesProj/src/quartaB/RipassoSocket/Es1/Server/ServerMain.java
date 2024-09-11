@@ -43,7 +43,7 @@ public class ServerMain {
 
                 //Spedire a client i risultati
                 /*
-                TODO: Secondo voi, perchè questa soluzione non funziona? ;) (Continua..)
+                TODO: Secondo voi, perchè questa soluzione non funziona bene? ;) (Continua..)
                 toCLient.println("La stringa inviata ha: \n" +
                         "-" + totalChars + " caratteri \n" +
                         "-" + vowelsCount + " vocali \n" +
