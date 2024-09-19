@@ -18,6 +18,7 @@ public class PalindromeThreadClient extends Thread {
 
     public PalindromeThreadClient(String name, String hostName, int hostPort, String valueToSend) {
         setName(name);
+        System.out.println(getName() + ": SENDING:> " + valueToSend);
         this.hostName = hostName;
         this.hostPort = hostPort;
         this.valueToSend = valueToSend;
