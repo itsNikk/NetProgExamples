@@ -1,39 +1,22 @@
 package quartaA.RipassoSocket.Es4.Client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Scanner;
+import quartaA.RipassoSocket.Es4.Server.PalindromeServer;
 
 public class PalindromeClient {
+    private static final int NUM_PALINDROME_THREADS = 10;
+    private static final int NUM_NON_PALINDROME_THREADS = 10;
+
     public static void main(String[] args) {
-        try (Socket s = new Socket("localhost", 12345)) {
 
-            BufferedReader fromServer = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            PrintWriter toServer = new PrintWriter(s.getOutputStream(), true);
+        String hostName = "localhost";
+        int hostPort = PalindromeServer.PORT;
 
-            //Leggi stringa da console
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Inserisci una stringa: ");
-            String valueToSend = scanner.nextLine();
+        for (int i = 0; i < NUM_PALINDROME_THREADS; i++)
+            new PalindromeThreadClient("PaliThread" + (i + 1), hostName, hostPort, "Annnnna").start();
 
-            toServer.println(valueToSend);
+        for (int i = 0; i < NUM_NON_PALINDROME_THREADS; i++)
+            new PalindromeThreadClient("NonPaliThread" + (i + 1), hostName, hostPort, "JustAString" + (i + 1)).start();
 
-            String responseFromServer = fromServer.readLine();
-            System.out.println(responseFromServer);
 
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        } catch (UnknownHostException e) {
-            System.out.println("Host sconosciuto");
-        } catch (ConnectException c) {
-            System.out.println("SERVER DOWN");
-        } catch (IOException e) {
-            System.out.println("Generico errore di rete");
-        }
     }
 }

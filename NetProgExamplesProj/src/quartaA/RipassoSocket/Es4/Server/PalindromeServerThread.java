@@ -57,7 +57,9 @@ public class PalindromeServerThread extends Thread {
 
     private boolean isPalindrome(String stringToCheck) {
         //Rimuovo eventuali spazi,farebbero fallire il controllo
-        stringToCheck= stringToCheck.replace(" ","");
+        //Considero tutta la stringa in minuscolo perchè, ai fini del controllo della palindromia,
+        //non è importante distinguere le maiuscole da minuscole
+        stringToCheck = stringToCheck.toLowerCase().replace(" ", "");
 
         int left = 0;
         int right = stringToCheck.length() - 1;

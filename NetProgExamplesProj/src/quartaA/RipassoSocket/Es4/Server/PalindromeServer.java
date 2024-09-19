@@ -6,8 +6,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class PalindromeServer {
+    public static final int PORT = 12345;
+
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(12345)) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server up...");
 
             while (true) {
