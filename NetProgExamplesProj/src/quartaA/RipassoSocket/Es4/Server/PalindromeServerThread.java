@@ -55,8 +55,17 @@ public class PalindromeServerThread extends Thread {
         }
     }
 
-    private boolean isPalindrome(String in) {
-        //TODO: da implementare
+    private boolean isPalindrome(String stringToCheck) {
+        //Rimuovo eventuali spazi,farebbero fallire il controllo
+        stringToCheck= stringToCheck.replace(" ","");
+
+        int left = 0;
+        int right = stringToCheck.length() - 1;
+        while (left < right) {
+            if ((stringToCheck.charAt(left) != stringToCheck.charAt(right))) return false;
+            left++;
+            right--;
+        }
         return true;
     }
 }
